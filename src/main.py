@@ -1,143 +1,90 @@
-# main.py
+"""
+main.py - Main Program
+
+This module contains the main program that orchestrates the compression of a text file.
+
+Modules:
+    os: Provides a way of using operating system-dependent functionality.
+    sys: Provides access to some variables used or maintained by the interpreter and functions that interact strongly with the interpreter.
+    UserInterface: Module handling user interactions and providing a step-by-step guide.
+    WordReplacer: Module containing the WordReplacer class for word replacement operations.
+    FrequencyAnalyzer: Module containing the FrequencyAnalyzer class for word frequency analysis.
+    LogManager: Module containing the LogManager class for logging program activities.
+
+Functions:
+    main() -> None:
+        The main function that coordinates the execution of the program. It guides the user, analyzes word frequencies,
+        performs word replacement, logs activities, and saves the compressed text to an output file.
+
+Usage Example:
+    if __name__ == "__main__":
+        main()
+
+"""
+
 import os
 import sys
-from collections import Counter
-import datetime
-
-class FrequencyAnalyzer:
-    @staticmethod
-    def analyze(text):
-        words = text.split()
-        word_counts = Counter(words)
-        return word_counts
-
-class LogManager:
-    @staticmethod
-    def log_activity(action, details):
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_entry = f"{timestamp} - {action}: {details}\n"
-        log_file_path = "log/activity_log.txt"
-        with open(log_file_path, "a") as log_file:
-            log_file.write(log_entry)
-        return log_file_path  # Přidáno pro použití v UserInterface
-
-    @staticmethod
-    def print_log():
-        try:
-            with open("log/activity_log.txt", "r") as log_file:
-                log_content = log_file.read()
-                print("Log content:")
-                print(log_content)
-        except FileNotFoundError:
-            print("Log file not found.")
-
-class UserInterface:
-    @staticmethod
-    def get_input_file():
-        while True:
-            try:
-                input_file_path = input("Zadejte cestu k vstupnímu souboru: ")
-                
-                # Kontrola koncovky souboru
-                if not input_file_path.endswith('.txt'):
-                    raise ValueError("Chyba: Zadaný soubor není souborem s koncovkou .txt.")
-                
-                with open(input_file_path, "r", encoding="utf-8") as file:
-                    file_content = file.read()
-                    if not file_content:
-                        raise ValueError("Chyba: Zadaný soubor je prázdný.")
-                    return input_file_path
-            except FileNotFoundError:
-                error_message = "Chyba: Zadaný soubor neexistuje. Zadejte platnou cestu k souboru."
-                log_file_path = LogManager.log_activity("Error", error_message)
-                print(error_message)
-                print(f"Chyba byla zaznamenána do logu: {log_file_path}")
-            except ValueError as e:
-                error_message = str(e)
-                log_file_path = LogManager.log_activity("Error", error_message)
-                print(error_message)
-                print(f"Chyba byla zaznamenána do logu: {log_file_path}")
-
-    @staticmethod
-    def get_word_replacements():
-        replacements = {}
-        while True:
-            word = input("Zadejte slovo, které chcete nahradit, nebo stiskněte Enter pro ukončení: ")
-            if not word:
-                break
-            abbreviation = input(f"Zadejte zkratku pro slovo '{word}': ")
-            replacements[word] = abbreviation
-        return replacements
-
-    @staticmethod
-    def get_output_file():
-        while True:
-            output_file_path = input("Zadejte název výstupního souboru (nechte prázdné pro výchozí): ")
-            if output_file_path:
-                return output_file_path
-            else:
-                print("Zadali jste prázdný název souboru. Zadejte znovu.")
-
-class WordReplacer:
-    def __init__(self, replacement_dict):
-        self.replacement_dict = replacement_dict
-
-    def replace_words(self, text):
-        for original, replacement in self.replacement_dict.items():
-            text = text.replace(original, replacement)
-        return text
+from user_interface import UserInterface
+from algorithms import WordReplacer
+from frequency_analyzer import FrequencyAnalyzer
+from log_manager import LogManager
 
 def main():
-    # Zajisti, že projekt_root je v sys.path
+    """
+    The main function that orchestrates the compression of a text file.
+
+    This function guides the user through the compression process, analyzes word frequencies, performs word replacement
+    based on user input, logs activities, and saves the compressed text to an output file.
+
+    """
+    read_guide = input("Do you want to read the guide? (yes/no): ")
+    if read_guide.lower() == "yes":
+        UserInterface.show_guide()
+        input("Press Enter to continue.")
+    
+    # Ensure that project_root is in sys.path
     project_root = os.path.abspath(os.path.dirname(__file__))
     sys.path.append(project_root)
 
-    # Získání vstupního textu
+    # Get input text
     input_file_path = UserInterface.get_input_file()
     with open(input_file_path, "r", encoding="utf-8") as file:
         input_text = file.read()
 
-    # Výpis slov z vstupního textu
-    print("Slova ve vstupním textu:")
+    # Print words from the input text
+    print("Words in the input text:")
     print(input_text.split())
 
-    # Frekvenční analýza slov
+    # Word frequency analysis
     frequency_analyzer = FrequencyAnalyzer()
     word_counts = frequency_analyzer.analyze(input_text)
 
     print("-------------------------------------------------------------------------------------------")
-    print("Frekvence slov:")
+    print("Word frequencies:")
     print(word_counts)
 
-    # Získání nahrazovaných slov a jejich zkratek
+    # Get replacement words and their abbreviations
     replacements = UserInterface.get_word_replacements()
 
-    # Nahrazení slov podle konfigurace
+    # Replace words according to the configuration
     word_replacer = WordReplacer(replacements)
     compressed_text = word_replacer.replace_words(input_text)
 
-    # Záznam do logu
+    # Log the activity
     action_details = f"Replaced words: {replacements}"
     LogManager.log_activity("Word Replacement", action_details)
 
-    # Uložení komprimovaného textu do výstupního souboru
+    # Save compressed text to the output file
     output_file_path = UserInterface.get_output_file()
     with open(output_file_path, "w") as file:
         file.write(compressed_text)
 
-    # Možnost vypsání logu
+    # Print the log
     print("-------------------------------------------------------------------------------------------")
-    print("Chcete vypsat log?")
-    print("1 - ano")
-    print("2 - ne")
-    print("-------------------------------------------------------------------------------------------")
-    log = input("Zadejte číslo: ")
-    if log == "1":
+    print("Do you want to print the log? (yes/no): ")
+    print_log = input()
+    if print_log.lower() == "yes":
         LogManager.print_log()
-    elif log == "2":
-        print("Log nebyl vypsán.")
-    else:
-        print("Neplatná volba.")
 
 if __name__ == "__main__":
     main()
