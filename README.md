@@ -42,4 +42,4 @@ The code is organized into distinct directories, including /log for logs, /confi
 - [x] The program must be divided into multiple files and folders for individual parts. Logs should be in the /log directory, configurations in the /config directory, data and files in the /data directory, source code divided into additional packages/modules in the /src directory (user interface separately, compression algorithms separately, log handling separately). Documentation in the /doc directory and unit tests in the /test directory. If external source code is used, it must be in a separate directory, such as /lib or /vendor.
 - [ ] Besides the compressed file, the program may generate auxiliary files, such as a coding table, a list of abbreviations, etc.
 
-# THE DOCUMENTATION FOR MY CODE WAS ENTIRELY GENERATED USING AI
+# THE DOCUMENTATION FOR MY CODE AND THIS README.MD WAS GENERATED USING AI
