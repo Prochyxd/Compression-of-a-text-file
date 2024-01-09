@@ -1,0 +1,92 @@
+"Vytvořte databázi, která bude spravovat účty a částky na účtech, dále u účtu uveďte účel účtu pro který byl zřízen."
+CREATE DATABASE banka;
+
+USE banka;
+
+CREATE TABLE ucet1 (
+    id INT NOT NULL AUTO_INCREMENT,
+    cislo_uctu INT NOT NULL,
+    castka INT NOT NULL,
+    ucel VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE ucet2 (
+    id INT NOT NULL AUTO_INCREMENT,
+    cislo_uctu INT NOT NULL,
+    castka INT NOT NULL,
+    ucel VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE ucet3 (
+    id INT NOT NULL AUTO_INCREMENT,
+    cislo_uctu INT NOT NULL,
+    castka INT NOT NULL,
+    ucel VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+"
+1)
+Vytvořte transakci, která zajistí bezproblémový převod peněz z jednoho účtu na druhy účet. 
+Čísla účtu stejně jako obnos jsou volitelné parametry.
+
+Kontrolujte zda na zdrojovém účtu je potřebný obnos k převodu. 
+Pokud tam není potřebná částka, tak se transakce neprovede. 
+Nezapomeňte na uživatelsky přívětivé výsledky u prováděných transakcí(printy).
+"
+
+BEGIN TRANSACTION transakce1;
+
+SET @castka = 1000;
+SET @ucet1 = 1;
+SET @ucet2 = 2;
+
+SELECT * FROM ucet1 WHERE id = @ucet1;
+SELECT * FROM ucet2 WHERE id = @ucet2;
+
+IF @castka <= (SELECT castka FROM ucet1 WHERE id = @ucet1) THEN
+    UPDATE ucet1 SET castka = castka - @castka WHERE id = @ucet1;
+    UPDATE ucet2 SET castka = castka + @castka WHERE id = @ucet2;
+    SELECT * FROM ucet1 WHERE id = @ucet1;
+    SELECT * FROM ucet2 WHERE id = @ucet2;
+ELSE
+    SELECT "Nedostatek penez na uctu";
+END IF;
+
+COMMIT;
+
+"
+2)
+Vytvořte transakci, která zajistí bezproblémový převod peněz z jednoho účtu na dva účty. 
+Čísla účtů stejně jako obnos jsou volitelné parametry.
+
+Kontrolujte zda na zdrojovém účtu je potřebný obnos k převodu. 
+Pokud tam není potřebná částka, tak se transakce neprovede. 
+Pokud se transakce neprovede  uveďte jaky obnos měl byt převeden a jaký byl k dispozici. 
+Nezapomeňte na uživatelsky přívětivé výsledky u prováděných transakcí(printy).
+"
+
+BEGIN TRANSACTION transakce2;
+
+SET @castka = 1000;
+SET @ucet1 = 1;
+SET @ucet2 = 2;
+SET @ucet3 = 3;
+
+SELECT * FROM ucet1 WHERE id = @ucet1;
+SELECT * FROM ucet2 WHERE id = @ucet2;
+SELECT * FROM ucet3 WHERE id = @ucet3;
+
+IF @castka <= (SELECT castka FROM ucet1 WHERE id = @ucet1) THEN
+    UPDATE ucet1 SET castka = castka - @castka WHERE id = @ucet1;
+    UPDATE ucet2 SET castka = castka + @castka / 2 WHERE id = @ucet2;
+    UPDATE ucet3 SET castka = castka + @castka / 2 WHERE id = @ucet3;
+    SELECT * FROM ucet1 WHERE id = @ucet1;
+    SELECT * FROM ucet2 WHERE id = @ucet2;
+    SELECT * FROM ucet3 WHERE id = @ucet3;
+ELSE
+    SELECT "Nedostatek penez na uctu";
+END IF;
+
+COMMIT;

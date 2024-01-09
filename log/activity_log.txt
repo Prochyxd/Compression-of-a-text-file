@@ -1,0 +1,2 @@
+2024-01-09 11:43:21 - Compression: Compression configuration: SELECT, Replaced words: {'"Vytvoøte': 'sl', 'databázi,': '\t', 'který': 'w', 'byl': 'e', 'zøízen."': 'r', 'DATABASE': 'g'}
+2024-01-09 11:52:44 - Compression: Compression configuration: WHERE, Replaced words: {'"Vytvoøte': 'vytv', 'databázi,': 'dat', 'která': 'kt', 'bude': 'b', 'spravovat': 'spr'}
