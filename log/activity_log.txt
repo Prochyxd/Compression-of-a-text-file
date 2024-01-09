@@ -4,3 +4,10 @@
 2024-01-09 15:46:31 - Compression: Compression configuration: WHERE, Replaced words: {'WHERE': 'wh'}
 2024-01-09 15:48:54 - Compression: Compression configuration: WHERE, Replaced words: {'WHERE': 'wh'}
 2024-01-09 15:53:08 - Word Replacement: Replaced words: {'castka': 'cc', 'WHERE': 'wh'}
+2024-01-09 16:14:32 - Word Replacement: Replaced words: {'=': 'asdf', 'id': 'ppppp', 'WHERE': 'llllll', 'castka': 'gfgfdgfdgfdg'}
+2024-01-09 16:20:27 - Word Replacement: Replaced words: {}
+2024-01-09 16:24:27 - Word Replacement: Replaced words: {}
+2024-01-09 16:27:41 - Error: Chyba: Zadaný soubor není souborem s koncovkou .txt.
+2024-01-09 16:27:54 - Error: Chyba: Zadaný soubor není souborem s koncovkou .txt.
+2024-01-09 16:28:04 - Error: Chyba: Zadaný soubor je prázdný.
+2024-01-09 16:28:17 - Word Replacement: Replaced words: {'WHERE': 'Adam'}

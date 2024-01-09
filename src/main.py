@@ -16,13 +16,47 @@ class LogManager:
     def log_activity(action, details):
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_entry = f"{timestamp} - {action}: {details}\n"
-        with open("log/activity_log.txt", "a") as log_file:
+        log_file_path = "log/activity_log.txt"
+        with open(log_file_path, "a") as log_file:
             log_file.write(log_entry)
+        return log_file_path  # Přidáno pro použití v UserInterface
+
+    @staticmethod
+    def print_log():
+        try:
+            with open("log/activity_log.txt", "r") as log_file:
+                log_content = log_file.read()
+                print("Log content:")
+                print(log_content)
+        except FileNotFoundError:
+            print("Log file not found.")
 
 class UserInterface:
     @staticmethod
     def get_input_file():
-        return input("Zadejte cestu k vstupnímu souboru: ")
+        while True:
+            try:
+                input_file_path = input("Zadejte cestu k vstupnímu souboru: ")
+                
+                # Kontrola koncovky souboru
+                if not input_file_path.endswith('.txt'):
+                    raise ValueError("Chyba: Zadaný soubor není souborem s koncovkou .txt.")
+                
+                with open(input_file_path, "r", encoding="utf-8") as file:
+                    file_content = file.read()
+                    if not file_content:
+                        raise ValueError("Chyba: Zadaný soubor je prázdný.")
+                    return input_file_path
+            except FileNotFoundError:
+                error_message = "Chyba: Zadaný soubor neexistuje. Zadejte platnou cestu k souboru."
+                log_file_path = LogManager.log_activity("Error", error_message)
+                print(error_message)
+                print(f"Chyba byla zaznamenána do logu: {log_file_path}")
+            except ValueError as e:
+                error_message = str(e)
+                log_file_path = LogManager.log_activity("Error", error_message)
+                print(error_message)
+                print(f"Chyba byla zaznamenána do logu: {log_file_path}")
 
     @staticmethod
     def get_word_replacements():
@@ -90,6 +124,20 @@ def main():
     output_file_path = UserInterface.get_output_file()
     with open(output_file_path, "w") as file:
         file.write(compressed_text)
+
+    # Možnost vypsání logu
+    print("-------------------------------------------------------------------------------------------")
+    print("Chcete vypsat log?")
+    print("1 - ano")
+    print("2 - ne")
+    print("-------------------------------------------------------------------------------------------")
+    log = input("Zadejte číslo: ")
+    if log == "1":
+        LogManager.print_log()
+    elif log == "2":
+        print("Log nebyl vypsán.")
+    else:
+        print("Neplatná volba.")
 
 if __name__ == "__main__":
     main()
